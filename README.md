@@ -106,6 +106,7 @@ python "代码层/packages/governance/docgov/docgov.py" --config "治理层/proj
   ontology.json          对象、关系、状态定义与规则层
   assets.json            代码资产登记
   state/                 索引与核对指纹（可重建）
+skill/                   可直接安装的 Agent Skill 包（SkillHub 同源）
 ```
 
 ## 适用与不适用
