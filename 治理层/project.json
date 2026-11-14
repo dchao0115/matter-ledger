@@ -1,0 +1,13 @@
+{
+  "project_id": "demo",
+  "project_name": "示例项目",
+  "docs_root": "../文档层",
+  "code_root": "../代码层",
+  "registry": "ontology.json",
+  "assets": "assets.json",
+  "state": "state",
+  "template_dirs": [
+    "模板"
+  ],
+  "external_uris": []
+}

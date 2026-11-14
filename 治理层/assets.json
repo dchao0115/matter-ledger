@@ -1,0 +1,28 @@
+[
+  {
+    "name": "治理 CLI 实现与测试",
+    "uri": "code://demo/docgov",
+    "location": "packages/governance/docgov",
+    "status": "active",
+    "related": [],
+    "links": [
+      {
+        "type": "implements",
+        "target": "module://demo/docgov"
+      }
+    ]
+  },
+  {
+    "name": "示例模块源码",
+    "uri": "code://demo/example",
+    "location": "packages/business/example",
+    "status": "planned",
+    "related": [],
+    "links": [
+      {
+        "type": "implements",
+        "target": "module://demo/example"
+      }
+    ]
+  }
+]

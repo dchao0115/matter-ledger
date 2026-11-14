@@ -1,0 +1,622 @@
+{
+  "version": 1,
+  "description": "基于 DSH 职责裁剪的个人 AI Coding 文档治理本体；只在本包注册，不修改其他项目的注册表。",
+  "object_types": {
+    "project": {
+      "name": "项目主记录",
+      "prefix": "project",
+      "statuses": [
+        "active",
+        "retired"
+      ],
+      "source": "DSH 根 README / architecture 的项目入口职责",
+      "headings": [
+        "## 目标与边界",
+        "## 当前状态",
+        "## 开始工作"
+      ]
+    },
+    "module": {
+      "name": "模块主记录",
+      "prefix": "module",
+      "statuses": [
+        "planned",
+        "active",
+        "retired"
+      ],
+      "source": "DSH 子树 AGENTS.md + 包 README",
+      "headings": [
+        "## 职责",
+        "## 输入与输出",
+        "## 开发与验证",
+        "## 关联资料"
+      ]
+    },
+    "document": {
+      "name": "专题文档",
+      "prefix": "doc",
+      "statuses": [
+        "draft",
+        "active",
+        "archived"
+      ],
+      "kinds": [
+        "rule",
+        "architecture",
+        "reference",
+        "procedure",
+        "verification",
+        "source"
+      ],
+      "source": "DSH docs 的规则、架构、参考、教程和验证职责"
+    },
+    "decision": {
+      "name": "决策记录",
+      "prefix": "decision",
+      "statuses": [
+        "proposed",
+        "implemented",
+        "rejected"
+      ],
+      "source": "DSH Agent Notes；归档保留 implemented 并加 archived_at"
+    },
+    "activity": {
+      "name": "作业与讨论记录",
+      "prefix": "activity",
+      "statuses": [
+        "active",
+        "closed"
+      ],
+      "source": "DSH postmortem / 开发过程记录，扩充用户所需接续流水账"
+    },
+    "code": {
+      "name": "代码资产",
+      "prefix": "code",
+      "statuses": [
+        "planned",
+        "active",
+        "retired"
+      ],
+      "source": "为 DSH 模块文档映射到源码增加的最小对象"
+    },
+    "workflow": {
+      "name": "Workflow 编排记录",
+      "prefix": "workflow",
+      "statuses": [
+        "draft",
+        "active",
+        "deprecated"
+      ],
+      "kinds": [
+        "orchestrated",
+        "guided"
+      ],
+      "headings": {
+        "orchestrated": [
+          "## 用途",
+          "## 输入与输出",
+          "## 步骤",
+          "## 失败分类",
+          "## 关联资料"
+        ],
+        "guided": [
+          "## 用途",
+          "## 触发",
+          "## 用到的模块",
+          "## 提示词与规则",
+          "## 验收",
+          "## 关联资料"
+        ]
+      },
+      "source": "DSH workflow 子系统（编排型）与本地业务渠道（引导型），按执行控制权分两 kind"
+    }
+  },
+  "link_types": {
+    "belongs_to": {
+      "name": "属于项目",
+      "from": [
+        "module",
+        "document",
+        "decision",
+        "activity",
+        "code",
+        "workflow"
+      ],
+      "to": [
+        "project"
+      ],
+      "source": "文档与模块的项目归属；由 project 字段生成"
+    },
+    "governs": {
+      "name": "约束",
+      "from": [
+        "document"
+      ],
+      "to": [
+        "project",
+        "module",
+        "workflow"
+      ],
+      "source": "AGENTS.md 的规则作用范围"
+    },
+    "describes": {
+      "name": "说明",
+      "from": [
+        "document"
+      ],
+      "to": [
+        "project",
+        "module",
+        "code",
+        "workflow"
+      ],
+      "source": "架构页、专题文档对对象的说明"
+    },
+    "implements": {
+      "name": "实现",
+      "from": [
+        "code"
+      ],
+      "to": [
+        "module"
+      ],
+      "source": "代码实体与模块主记录的映射"
+    },
+    "depends_on": {
+      "name": "依赖",
+      "from": [
+        "module",
+        "code",
+        "workflow"
+      ],
+      "to": [
+        "module",
+        "code"
+      ],
+      "source": "DSH 模块和公开能力依赖；Workflow 用 depends_on 指向它用到的模块"
+    },
+    "affects": {
+      "name": "影响",
+      "from": [
+        "decision",
+        "activity"
+      ],
+      "to": [
+        "project",
+        "module",
+        "document",
+        "code",
+        "workflow"
+      ],
+      "source": "Agent Notes / 过程记录作用的对象"
+    },
+    "supersedes": {
+      "name": "完整替代",
+      "from": [
+        "decision",
+        "document"
+      ],
+      "to": [
+        "decision",
+        "document"
+      ],
+      "source": "DSH supersession；部分替代用 related 并在正文注明保留范围"
+    },
+    "verifies": {
+      "name": "验证",
+      "from": [
+        "document"
+      ],
+      "to": [
+        "module",
+        "code",
+        "workflow"
+      ],
+      "source": "验证记录与被验证对象"
+    },
+    "references": {
+      "name": "引用",
+      "from": [
+        "project",
+        "module",
+        "workflow",
+        "document",
+        "decision",
+        "activity",
+        "code"
+      ],
+      "to": [
+        "project",
+        "module",
+        "workflow",
+        "document",
+        "decision",
+        "activity",
+        "code"
+      ],
+      "source": "DSH 文档交叉引用；由 related 字段生成"
+    }
+  },
+  "rule_layer": {
+    "description": "L3 规则层：把散文规矩登记为可校验的规则对象，由 check --logic 执行。规则只读取 object_types 与 link_types 登记的对象和关系；改规矩只改本段，不改对象与关系定义。",
+    "object_types": {
+      "rule": {
+        "name": "业务规则",
+        "id_pattern": "RULE-[A-Z]+-[0-9]{3}",
+        "statuses": [
+          "candidate",
+          "active",
+          "deprecated"
+        ],
+        "severities": [
+          "error",
+          "warning",
+          "reminder"
+        ],
+        "layers": [
+          "L3"
+        ],
+        "fields": {
+          "ruleId": "唯一标识，RULE-<领域>-<三位序号>",
+          "name": "业务语言短名",
+          "statement": "自然语言陈述，人能读",
+          "scope": "作用的 Object Type 与 Link Type，生成 governs",
+          "check": "可执行校验：function 为规则引擎内置校验函数，params 为判断取值",
+          "severity": "error 使 check --logic 失败；warning 与 reminder 只报告",
+          "layer": "归属可计算层，本版只有 L3",
+          "source": "规则来源的文档或决策 URI，生成 derived_from",
+          "status": "active 执行；candidate 已登记待启用；deprecated 已停用",
+          "feedback": "违反时给人的处理方案：option_a、option_b、recommend"
+        },
+        "source": "L3 规则层提案的规则对象形态；人能读（statement）且机器能跑（check）才算规则"
+      }
+    },
+    "link_types": {
+      "governs": {
+        "name": "约束类型",
+        "from": [
+          "rule"
+        ],
+        "to": [
+          "object_type",
+          "link_type"
+        ],
+        "source": "规则 scope 字段；类型级关系，与实例级 governs（规则文档 → 项目/模块/Workflow）分属不同命名空间"
+      },
+      "derived_from": {
+        "name": "规则来源",
+        "from": [
+          "rule"
+        ],
+        "to": [
+          "document",
+          "decision"
+        ],
+        "source": "规则 source 字段；也可指向 project.json 声明的外部 URI"
+      }
+    },
+    "rules": [
+      {
+        "ruleId": "RULE-DECISION-001",
+        "name": "决策替代状态一致",
+        "statement": "决策沿用 proposed / implemented / rejected 三态。被已实施决策完整替代的旧决策，必须归档（保留 implemented 并加 archived_at）或改为 rejected，不能继续作为现行或待定决定；已拒绝的决策不能登记为替代别的决策。",
+        "scope": {
+          "object_types": [
+            "decision"
+          ],
+          "link_types": [
+            "supersedes"
+          ]
+        },
+        "check": {
+          "function": "supersession_state",
+          "params": {
+            "in_force_statuses": [
+              "implemented"
+            ],
+            "void_statuses": [
+              "rejected"
+            ],
+            "retired_statuses": [
+              "rejected"
+            ]
+          }
+        },
+        "severity": "error",
+        "layer": "L3",
+        "source": [
+          "doc://demo/evolution-rules",
+          "doc://demo/writing"
+        ],
+        "status": "active",
+        "feedback": {
+          "option_a": "旧决策实施过：保留 implemented 并加 archived_at 归档；它只是没落地的提案：改为 rejected 并写明拒绝原因。之后上下文只出现新决定，旧记录仍可用 --history 追溯。",
+          "option_b": "新决策其实只替代了一部分：去掉 supersedes，改用 related 互相关联，并在双方正文写明各自仍有效的范围。两条决定都继续有效，读者要按范围区分。",
+          "recommend": "确属完整替代时选 A，这是演进规则规定的做法；确有旧决定的一部分仍有效时才选 B。已拒绝的决策误登了替代关系时，删去这条 supersedes 即可。"
+        }
+      },
+      {
+        "ruleId": "RULE-DECISION-002",
+        "name": "决策与活动须连到影响对象",
+        "statement": "每条未归档的决策和活动记录，都要用影响（affects）关系连到它作用的项目、模块、文档、代码或 Workflow；跨模块的记录只写一份，分别关联各对象。",
+        "scope": {
+          "object_types": [
+            "decision",
+            "activity"
+          ],
+          "link_types": [
+            "affects"
+          ]
+        },
+        "check": {
+          "function": "has_outgoing",
+          "params": {
+            "exempt_statuses": []
+          }
+        },
+        "severity": "warning",
+        "layer": "L3",
+        "source": [
+          "doc://demo/evolution-rules",
+          "doc://demo/workflow"
+        ],
+        "status": "active",
+        "feedback": {
+          "option_a": "在这条记录的 links 补登 affects，指向它实际影响的对象。之后这些对象的上下文会自动带上它，改相关模块时不会漏看。",
+          "option_b": "保持现状。记录仍能用 list、show 查到，但只有手工引用它的主记录才会带上它，后来的人容易漏掉这次取舍或作业结果。",
+          "recommend": "选 A。补一条关系的成本很低，却决定了这条记录能不能出现在相关上下文里。"
+        }
+      },
+      {
+        "ruleId": "RULE-LINK-001",
+        "name": "依赖与替代关系无环",
+        "statement": "依赖（depends_on）从调用方指向被依赖者，完整替代（supersedes）从新记录指向旧记录；两种关系都不能绕成环，否则无法判断谁依赖谁、谁替代谁。",
+        "scope": {
+          "object_types": [
+            "module",
+            "code",
+            "workflow",
+            "decision",
+            "document"
+          ],
+          "link_types": [
+            "depends_on",
+            "supersedes"
+          ]
+        },
+        "check": {
+          "function": "acyclic",
+          "params": {}
+        },
+        "severity": "error",
+        "layer": "L3",
+        "source": [
+          "doc://demo/ontology",
+          "doc://demo/evolution-rules",
+          "decision://demo/l3-rule-layer"
+        ],
+        "status": "active",
+        "feedback": {
+          "option_a": "找出环上方向登反或多登的那条关系，删除或改向，让依赖回到单向（调用方 → 被依赖者）。影响查询和修改顺序随之恢复明确。",
+          "option_b": "两个模块确实互相调用：把共同依赖的部分拆成第三个模块，双方都依赖它。要新增模块主记录和代码资产登记，改动更大，但边界更清楚。",
+          "recommend": "先按 A 核对是不是误登；确认是真实的双向调用再选 B。替代关系成环一定是登记错误，按 A 处理。"
+        }
+      },
+      {
+        "ruleId": "RULE-LINK-002",
+        "name": "现行对象不依赖不可用对象",
+        "statement": "状态为 active 的模块、代码资产或 Workflow，不能依赖仍为 planned 或已经 retired 的模块和代码资产；退役模块要先处理调用方，不能只改状态。",
+        "scope": {
+          "object_types": [
+            "module",
+            "code",
+            "workflow"
+          ],
+          "link_types": [
+            "depends_on"
+          ]
+        },
+        "check": {
+          "function": "dependency_status",
+          "params": {
+            "source_statuses": [
+              "active"
+            ],
+            "target_statuses": [
+              "planned",
+              "retired"
+            ]
+          }
+        },
+        "severity": "warning",
+        "layer": "L3",
+        "source": [
+          "doc://demo/module-rules",
+          "doc://demo/workflow"
+        ],
+        "status": "active",
+        "feedback": {
+          "option_a": "让被依赖的部分可用（实现后改为 active），或把调用方改为依赖仍在使用的替代模块。状态与真实可用性重新一致。",
+          "option_b": "调用方其实也还不可用：把它退回 planned（Workflow 退回 draft），等依赖就绪再启用。对外不再宣称它可用。",
+          "recommend": "依赖已退役时选 A，把调用方迁到替代模块；依赖只是还没开发时选 B，先如实标注状态。"
+        }
+      },
+      {
+        "ruleId": "RULE-MODULE-001",
+        "name": "模块须登记在项目入口",
+        "statement": "项目主记录是整体入口；除已退役模块外，每个模块都要登记在项目主记录的 related 中，让从项目入口开始工作的人能找到它。对象属于本项目已由结构检查保证，本规则检查入口登记。",
+        "scope": {
+          "object_types": [
+            "project",
+            "module"
+          ],
+          "link_types": [
+            "references"
+          ]
+        },
+        "check": {
+          "function": "project_lists_modules",
+          "params": {
+            "exempt_statuses": [
+              "retired"
+            ]
+          }
+        },
+        "severity": "warning",
+        "layer": "L3",
+        "source": [
+          "doc://demo/writing",
+          "doc://demo/workflow"
+        ],
+        "status": "active",
+        "feedback": {
+          "option_a": "在项目主记录 related 中加入该模块 URI，并在“当前状态”写明它是活动还是待填写。项目入口与实际模块清单一致。",
+          "option_b": "该模块已经不需要：改为 retired 并处理调用方，或删除这份主记录。模块清单随之收缩。",
+          "recommend": "模块仍在使用或在计划中时选 A；确认放弃时才选 B。"
+        }
+      },
+      {
+        "ruleId": "RULE-DOC-001",
+        "name": "文档须有归属对象",
+        "statement": "每份未归档的专题文档都要用约束（governs）、说明（describes）或验证（verifies）关系挂到它针对的项目、模块、代码或 Workflow；只出现在 related 或正文里不算归属。",
+        "scope": {
+          "object_types": [
+            "document"
+          ],
+          "link_types": [
+            "governs",
+            "describes",
+            "verifies"
+          ]
+        },
+        "check": {
+          "function": "has_outgoing",
+          "params": {
+            "exempt_statuses": [
+              "archived"
+            ]
+          }
+        },
+        "severity": "warning",
+        "layer": "L3",
+        "source": [
+          "doc://demo/writing",
+          "doc://demo/ontology"
+        ],
+        "status": "active",
+        "feedback": {
+          "option_a": "按文档的实际作用补登 links：规则用 governs，说明用 describes，验证记录用 verifies。对应对象的上下文会带上它。",
+          "option_b": "文档已经没有要说明的对象：改为 archived，或把有用内容并入已有文件。不留下没人读取的孤立文档。",
+          "recommend": "选 A；补登时找不到它针对的对象，说明它已过时，再选 B。"
+        }
+      },
+      {
+        "ruleId": "RULE-DOC-002",
+        "name": "模块目录内的记录须挂到该模块",
+        "statement": "放在某个模块文档目录（该模块 AGENTS.md 所在目录及其子目录）里的文档、决策和活动记录，必须用约束、说明、验证或影响关系挂到该模块或它的代码资产；目录位置与登记归属要一致。",
+        "scope": {
+          "object_types": [
+            "document",
+            "decision",
+            "activity"
+          ],
+          "link_types": [
+            "governs",
+            "describes",
+            "verifies",
+            "affects"
+          ]
+        },
+        "check": {
+          "function": "folder_ownership",
+          "params": {
+            "module_record_file": "AGENTS.md",
+            "exempt_statuses": [
+              "archived"
+            ]
+          }
+        },
+        "severity": "warning",
+        "layer": "L3",
+        "source": [
+          "doc://demo/module-rules",
+          "doc://demo/current-rules"
+        ],
+        "status": "active",
+        "feedback": {
+          "option_a": "补登指向该模块或它代码资产的关系。目录与登记一致，修改该模块时能看到这份记录。",
+          "option_b": "这份记录其实属于别的模块或整个项目：把文件移到对应目录（URI 不变），移动后重建 index。",
+          "recommend": "内容确实针对该模块时选 A；内容针对别处时选 B，免得按目录找资料的人被误导。"
+        }
+      },
+      {
+        "ruleId": "RULE-DECISION-003",
+        "name": "已实施决策须被现行对象引用",
+        "statement": "状态为 implemented 的决策，必须被至少一个现行（planned/active）文档、模块、代码或 Workflow 引用：可以是用引用/影响关系连到它，也可以是在正文里写出它的 URI。否则这条决定只存在于演进目录里，写相关模块的人读不到它。",
+        "scope": {
+          "object_types": [
+            "decision"
+          ],
+          "link_types": [
+            "references",
+            "affects",
+            "describes",
+            "implements",
+            "governs"
+          ]
+        },
+        "check": {
+          "function": "decision_referenced",
+          "params": {
+            "referenced_statuses": [
+              "planned",
+              "active"
+            ]
+          }
+        },
+        "severity": "warning",
+        "layer": "L3",
+        "source": [
+          "doc://demo/evolution-rules",
+          "doc://demo/current-rules"
+        ],
+        "status": "active",
+        "feedback": {
+          "option_a": "在受影响的现行文档或模块主记录的关联资料里补一条引用，或在正文写明该决策的 URI。之后按模块找资料的人能顺着看到这条决定。",
+          "option_b": "这条决定其实只影响演进过程、不影响任何现行内容：在决策正文说明它不影响现行做法，或把它归档（status 保持 implemented 并加 archived_at）。",
+          "recommend": "决定确实改变了现行做法时选 A；只是记录了一次未落到现行文档的讨论时选 B。"
+        }
+      },
+      {
+        "ruleId": "RULE-DECISION-004",
+        "name": "待定决策不得长期悬置",
+        "statement": "状态为 proposed 的决策超过规定天数仍未推进，应当明确落实为 implemented 或明确拒绝为 rejected；长期待定的决定既不是现行指令，也没有被否定，后来的人无法判断它是否有效。",
+        "scope": {
+          "object_types": [
+            "decision"
+          ],
+          "link_types": [
+            "supersedes"
+          ]
+        },
+        "check": {
+          "function": "proposed_stale",
+          "params": {
+            "max_age_days": 45
+          }
+        },
+        "severity": "reminder",
+        "layer": "L3",
+        "source": [
+          "doc://demo/evolution-rules"
+        ],
+        "status": "active",
+        "feedback": {
+          "option_a": "这条提案已被认可：改为 implemented，并按「已实施决策须被现行对象引用」把它连到受影响的现行文档。",
+          "option_b": "这条提案不再推进：改为 rejected，并在正文写明拒绝原因，便于以后遇到同类问题时不再重复讨论。",
+          "recommend": "还在推进中就补上处理进展并保留 proposed；已经不动了的直接走 B，留一条待定记录比留一条明确拒绝更费后来人的判断。"
+        }
+      }
+    ]
+  }
+}

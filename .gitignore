@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+治理层/state/*
+!治理层/state/.gitkeep
