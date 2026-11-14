@@ -1,7 +1,7 @@
 # 项目与完整材料
 
 - 仓库：https://github.com/dchao0115/matter-ledger
-- 版本：Skill 0.1.0；完整包以仓库 main 为准
+- 版本：Skill 0.1.1；完整包以仓库 main 为准
 - 许可：代码 MIT，文档 CC BY 4.0
 
 ## 完整包里有什么

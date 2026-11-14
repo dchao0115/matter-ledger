@@ -2,9 +2,9 @@
 slug: matter-ledger
 name: matter-ledger
 displayName: MatterLedger 事项台账
-version: 0.1.0
-summary: 给 AI 项目一个自包含的上下文台账，记录事项阶段、决策取舍与模块职责。
-description: 当项目会持续多轮、上下文散在聊天/文档/代码/记忆里，或用户说「帮我管这个项目、记录进展、接续、决策留痕、文档太乱」时使用。技能会在用户指定目录创建以项目命名的文件夹，写入事项台账、决策记录和模块主记录，并给出开工与收尾动作。不适用于一次性问答或单文件任务。
+version: 0.1.1
+summary: 项目多轮后 AI 总失忆？用一本事项台账管住上下文、决策与模块职责。
+description: 当项目会持续多轮、上下文散在聊天/文档/代码/记忆里，或用户说「帮我管这个项目、记录进展、接续、决策留痕、文档太乱」时使用。最值钱的三件事：① 决策记录强制写「真实备选 + 未采用理由」，被否的方案也有墓碑；② 事项台账一页看清每件事到哪一步；③ 文档与 ontology 双轨，本地 CLI 可查上下文与影响面。技能会在用户指定目录创建以项目命名的文件夹，写入事项台账、决策记录和模块主记录，并给出开工与收尾动作。不适用于一次性问答或单文件任务。
 tags: [context-management, project-management, documentation, ai-agents, decision-log]
 license: MIT
 homepage: https://github.com/dchao0115/matter-ledger

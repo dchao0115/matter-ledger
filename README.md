@@ -2,6 +2,12 @@
 
 > 给 AI 项目一个自包含的上下文存放处：事情到哪一步、为什么这样定、哪些方案被否、改这里会影响谁，都在一个目录里，AI 可以直接查。
 
+### 最值钱的三件事
+
+- **不采纳也留痕**：决策记录强制写「真实备选 + 未采用理由」，被否的方案下次不用再吵一遍。
+- **一页看清进度**：事项台账一行一件事，阶段、下一步、关联决策都在一起。
+- **AI 能顺着关系查**：文档与 ontology 双轨，`context` 取上下文，`impact` 查影响面。
+
 **English** — MatterLedger is a copyable governance package for AI-driven projects. It keeps every matter, decision and module in one self-contained place. A human-readable document layer and a machine-queryable ontology run in parallel; a local CLI lets an agent retrieve context (`context`), trace impact (`impact`), and check consistency (`check`). It does not call any model API and does not replace your agent.
 
 ## 它解决什么问题
